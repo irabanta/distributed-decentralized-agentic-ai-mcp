@@ -1,0 +1,23 @@
+{
+  "name": "ap2-payment-mcp-server",
+  "version": "0.1.0",
+  "description": "AP2-compliant loan EMI payment MCP server for Google Agent Payments Protocol flows",
+  "main": "dist/Server.js",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc",
+    "dev": "tsx watch src/Server.ts",
+    "start": "node dist/Server.js",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix"
+  },
+  "dependencies": {
+    "@daaif/mcp-servers": "file:..",
+    "@daaif/mcp-common": "file:../common"
+  },
+  "devDependencies": {
+    "tsx": "^4.6.2"
+  }
+}
+

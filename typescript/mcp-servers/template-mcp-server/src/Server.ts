@@ -1,13 +1,13 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import express from 'express';
+import pkg from '../package.json' with { type: "json" };
+import { env } from 'process';
 
 // Import Zod extensions to initialize prototype methods
 import '@daaif/mcp-common';
 
-import { getServerConfig } from './config/config.js';
 import { ResourcesBootstrap } from './resources/bootstrap.js';
-import { McpServerBootstrap } from './mcpserver/bootstrap.js';
 import { AccountBalanceBootstrap } from './account-balance/bootstrap.js';
+import { DaaifMcpServer } from '@daaif/mcp-common';
 
 async function startServer() {
     // Set up Express and HTTP transport
@@ -15,10 +15,11 @@ async function startServer() {
     app.use(express.json());
 
     // Create an MCP server with enterprise configuration
-    const config = getServerConfig();
-    const server = new McpServer({
-        name: config.name,
-        version: config.version
+    const server = new DaaifMcpServer({
+        name: env.SERVICE_NAME || pkg.name,
+        version: env.SERVICE_VERSION || pkg.version,
+        environment: env.NODE_ENV || 'development',
+        defaultPort: 3002
     });
 
     try {
@@ -29,7 +30,7 @@ async function startServer() {
         await AccountBalanceBootstrap.bootstrap(server);
 
         // Start the MCP server with express transport
-        await McpServerBootstrap.bootstrap(server, app);
+        await server.boot(server, app);
     } catch (error) {
         console.error('Failed to start server:', error);
         process.exit(1);

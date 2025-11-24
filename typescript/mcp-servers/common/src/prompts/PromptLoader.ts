@@ -49,4 +49,10 @@ export class PromptLoader {
   renderMessage(template: string, variables: Record<string, string>): string {
     return template.replace(/\{\{(\w+)\}\}/g, (_, key) => variables[key] || '');
   }
+
+  convertToKeyValueString(args: Record<string, any>): string {
+    return Object.entries(args)
+      .map(([key, value]) => `${key}: ${value ?? ""}`)
+      .join(", ");
+  }
 }
